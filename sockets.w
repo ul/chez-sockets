@@ -61,8 +61,8 @@ whether we are working on Windows or now.
 @ The following is an R6RS library that encapsulate this library 
 for use by external R6RS programs.
 
-@(sockets.sls@>=@q)
-(library (arcfide sockets)
+@(bsd-sockets.ss@>=@q)
+(library (bsd-sockets (1))
   (export make-socket socket? socket-fd socket-domain socket-type socket-protocol
 	  socket-option? make-socket-option socket-option
 	  define-socket-option-type
@@ -1415,7 +1415,7 @@ have do use a different extension based on the machine type that we have.
   [(i3nt ti3nt a6nt ta6nt)
    (begin (load-shared-object "socket-ffi-values.dll") #'(fake-define))]
   [(i3osx ti3osx ta6osx a6osx)
-   (begin (load-shared-object "socket-ffi-values.dylib") #'(fake-define))]
+   (begin (load-shared-object "socket-ffi-values.so") #'(fake-define))]
   [else (begin (load-shared-object "socket-ffi-values.so") #'(fake-define))])
 
 @ On the threaded versions, we must load a stub file that allows us to 
@@ -1425,7 +1425,7 @@ deal with the blocking FFI calls appropriately.
 @<Foreign code utilities@>=
 (on-machine
   [(ti3nt ta6nt) #'(fake-define (load-shared-object "sockets-stub.dll"))]
-  [(ti3osx ta6osx) #'(fake-define (load-shared-object "sockets-stub.dylib"))]
+  [(ti3osx ta6osx) #'(fake-define (load-shared-object "sockets-stub.so"))]
   [else
     (if (threaded?)
         #'(fake-define (load-shared-object "sockets-stub.so"))
@@ -1630,6 +1630,8 @@ must be defined for our library.
 #include <sys/unistd.h>
 #include <sys/fcntl.h>
 #endif
+
+#include <string.h>
 
 EXPORTED get_ffi_value(const char *val) {
   struct sockaddr_in sai;

@@ -26,6 +26,8 @@
 #include <sys/fcntl.h>
 #endif
 
+#include <string.h>
+
 EXPORTED get_ffi_value(const char *val) {
   struct sockaddr_in sai;
 #ifndef WIN32

@@ -1,8 +1,10 @@
-SCHEMEH=/usr/local/lib/csv9.4.1/ta6le
+SCHEMEH=/usr/local/lib/csv9.4.1/ta6osx
 
 .SUFFIXES: .c .so
 
-all: sockets sockets-stub.so socket-ffi-values.so
+all: sockets libs
+
+libs: sockets-stub.so socket-ffi-values.so
 
 sockets: sockets.w
 	cheztangle sockets.w
@@ -10,5 +12,4 @@ sockets: sockets.w
 	pdftex sockets
 
 .c.so:
-	gcc -fPIC -shared -I${SCHEMEH} -o $@ $<
-	
+	cc -O3 -dynamiclib -Wl,-undefined -Wl,dynamic_lookup -I${SCHEMEH} -o $@ $<

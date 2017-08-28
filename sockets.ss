@@ -455,12 +455,6 @@
 
 )
 
-(@< (Define\x20;POSIX\x20;foreign\x20;error\x20;handler ) => (errno errno-message )
-(define errno (foreign-procedure "get_errno" () int))
-(define errno-message (foreign-procedure "strerror" (int) string))
-
-)
-
 (@< (Define\x20;\x7C;get-ffi-value\x7C; %get-ffi-value ) => (get-ffi-value )
 (define-syntax (get-ffi-value x)
   (syntax-case x ()
@@ -468,6 +462,12 @@
      #`'#,(datum->syntax #'k 
             (%get-ffi-value 
 	     (symbol->string (syntax->datum #'name))))]))
+
+)
+
+(@< (Define\x20;POSIX\x20;foreign\x20;error\x20;handler ) => (errno errno-message )
+(define errno (foreign-procedure "get_errno" () int))
+(define errno-message (foreign-procedure "strerror" (int) string))
 
 )
 
@@ -891,11 +891,11 @@
   [(i3nt ti3nt a6nt ta6nt)
    (begin (load-shared-object "socket-ffi-values.dll") #'(fake-define))]
   [(i3osx ti3osx ta6osx a6osx)
-   (begin (load-shared-object "socket-ffi-values.dylib") #'(fake-define))]
+   (begin (load-shared-object "socket-ffi-values.so") #'(fake-define))]
   [else (begin (load-shared-object "socket-ffi-values.so") #'(fake-define))])
 (on-machine
   [(ti3nt ta6nt) #'(fake-define (load-shared-object "sockets-stub.dll"))]
-  [(ti3osx ta6osx) #'(fake-define (load-shared-object "sockets-stub.dylib"))]
+  [(ti3osx ta6osx) #'(fake-define (load-shared-object "sockets-stub.so"))]
   [else
     (if (threaded?)
         #'(fake-define (load-shared-object "sockets-stub.so"))

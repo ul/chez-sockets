@@ -1,4 +1,4 @@
-(library (arcfide sockets)
+(library (bsd-sockets (1))
   (export make-socket socket? socket-fd socket-domain socket-type socket-protocol
 	  socket-option? make-socket-option socket-option
 	  define-socket-option-type
